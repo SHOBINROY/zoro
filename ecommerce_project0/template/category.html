@@ -1,0 +1,86 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block metadescription %}
+{% if category %}
+{{category.description | truncatewords:155}}
+{% else %}
+WELCOME to ABC Store
+{% endif %}
+{% endblock %}
+
+{% block title %}
+{% if category %}
+{{category.name}}
+ABC STORE
+{% else %}
+See our new collections
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if category %}
+<div>
+    <div class="row my_row_class">
+        <div class="mx_auto">
+            <p><a href="{% url 'shop:allProdCat' %}">Our Product Collection</a></p>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div>
+    <div class="row mx_auto">
+        {% if category %}
+        <div>
+            <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}">
+        </div>
+    </div>
+    <br>
+    <div>
+        <h1 class="text-center my_title ">{{category.name}}</h1>
+        <p class="text-justify">{{category.description}}</p>
+    </div>
+    {% else %}
+    <div class="container">
+        <img class="my_image my_image_padding" src="{% static 'img/banner.jpg'  %}" alt="our products">
+    </div>
+    <div>
+        <h1 class="text-center my_title  ">OUR PRODUCTS COLLECTIONS</h1>
+        <p class="text-justify">TheInstrument Collection features a wide variety of multi-sampled acoustic, electric and
+            percussive instruments for the Ableton Live Sampler. instrument, including the Tape Pianoand Studio
+            Percussioncollections. The Instrument Collection contains 188 un-looped 16 bit WAV files and requires
+            Samplerand Ableton Live 8or higher. INSTRUMENTS</p>
+    </div>
+    {% endif %}
+</div>
+<div class="container">
+     <div class="row mx_auto">
+        {% for product in products.object_list %}
+                    <div class="my_bottom_margin col-sm-12 col-md-12 col-lg-6 text-center">
+                         <div style="min_width:18rem">
+                                    <a href="{{product.get_url}}"><img class="card-img-top my_image12" src="{{ product.image.url}}"  style="width:350px; height350px">
+                                        <h3 class="my_title"> {{product.name}} </h3></a>
+                                    <div class="card-body">
+                                        <h4><p>{{product.price}}</p></h4>
+                                </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+            </div>
+
+
+          <div class="mx-auto">
+    {% if products.paginator.num_pages > 1 %}
+
+<hr/>
+       <div class="text-center">
+        {% for pg in products.paginator.page_range %}
+        <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %} ">{{pg}}</a>
+        {% endfor %}
+    </div>
+<br>
+{% endif %}
+</div>
+</div>
+
+{% endblock %}
+
